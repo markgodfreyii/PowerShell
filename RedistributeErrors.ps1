@@ -1,6 +1,6 @@
 ﻿<# 
 .SYNOPSIS 
-Trigger Redistribution of Distribution Jobs with Errors - Alpha V0.1
+Trigger Redistribution of Distribution Jobs with Errors - Alpha V0.2
 .DESCRIPTION 
 Redistribute all Distribution Jobs with Errors, Will Update Content on All DPs to which content
  is currently targetted for distribution - Created by Mark Godfrey @Geodesicz
@@ -158,9 +158,9 @@ Else{
         # Application
         If($ObjType -eq '31'){
         
-            Write-Verbose "$PkgID is an Application. Grabbing SMS_Application Object"
-            $App = Query-CMWQL -WQLQuery "SELECT * from sms_application where packageid = '$PkgID'"
-            If($App -eq $null){Write-Error "Unable to find SMS_Application Object for $PkgID" -Verbose}
+            Write-Verbose "$PkgID is an Application. Grabbing SMS_ContentPackage Object"
+            $App = Query-CMWQL -WQLQuery "SELECT * from sms_contentpackage where packageid = '$PkgID'"
+            If($App -eq $null){Write-Error "Unable to find SMS_ContentPackage Object for $PkgID" -Verbose}
             Else{
                 Write-Verbose "Attempting to trigger Content Dedistribution for $PkgID"
                 $App.RefreshPkgSource()
