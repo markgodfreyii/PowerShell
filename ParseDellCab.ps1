@@ -1,8 +1,8 @@
 ﻿<# 
 .SYNOPSIS 
-Download and Parse Dell Downloads from CAB V1.0 - To be used in conjunction with other code for Dell Deployment Solutions
+Download and Parse Dell Downloads from CAB V1.1 - To be used in conjunction with other code for Dell Deployment Solutions
 .DESCRIPTION 
-Download and Parse Dell Downloads from CAB V1.0 - Created by Mark Godfrey @Geodesicz
+Download and Parse Dell Downloads from CAB V1.1 - Created by Mark Godfrey @Geodesicz
 .LINK
 http://www.tekuits.com
 #> 
@@ -34,7 +34,12 @@ $Downloads = $xml.SystemsManagementCatalog.SoftwareDistributionPackage
 
 # Find Target Download for Specific Desired Function (Example)
 $Model = (Get-WmiObject win32_computersystem).Model
-$Target = $Downloads | Where-Object -FilterScript {$PSitem.LocalizedProperties.Title -match $model}
+If(!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M"))){
+    $Target = $Downloads | Where-Object -FilterScript {
+        $PSitem.LocalizedProperties.Title -match $model -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
+    }
+}
+Else{$Target = $Downloads | Where-Object -FilterScript {$PSitem.LocalizedProperties.Title -match $model}}
 $TargetLink = $Target.InstallableItem.OriginFile.OriginUri
 $TargetFileName = $Target.InstallableItem.OriginFile.FileName
 Invoke-WebRequest -Uri $TargetLink -OutFile $PSScriptRoot\$TargetFileName -UseBasicParsing -Verbose
