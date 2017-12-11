@@ -1,9 +1,11 @@
-﻿<#
-Set Lenovo BIOS Settings
-For Windows 10 TS
-Enable Secure Boot
-By Mark Godfrey @Geodesicz
-#>
+<# 
+.SYNOPSIS 
+Enable Secure Boot in Lenovo BIOS on ThinkPad
+.DESCRIPTION 
+Enable Secure Boot via WMI for Lenovo ThinkPads  - Created by Mark Godfrey @Geodesicz
+.LINK
+http://www.tekuits.com 
+#> 
 
 [CmdletBinding()]
 Param(
