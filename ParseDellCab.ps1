@@ -21,7 +21,7 @@ $Items = $shell.Namespace($CabPath).items()
 $Extract = $shell.Namespace($PSScriptRoot)
 $Extract.CopyHere($Items)
 #>
-Expand $CabPath "$PSScriptRoot\DellSDPCatalogPC.xml"
+Expand $CabPath "-F:DellSDPCatalogPC.xml" "$PSScriptRoot"
 
 # Import and Create XML Object
 [xml]$XML = Get-Content $PSScriptRoot\DellSDPCatalogPC.xml -Verbose
