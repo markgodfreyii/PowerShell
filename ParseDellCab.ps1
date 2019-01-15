@@ -21,7 +21,7 @@ $Items = $shell.Namespace($CabPath).items()
 $Extract = $shell.Namespace($PSScriptRoot)
 $Extract.CopyHere($Items)
 #>
-Expand $CabPath "$PSScriptRoot\DellSDPCatalogPC.xml"
+Expand $CabPath "-F:DellSDPCatalogPC.xml" "$PSScriptRoot"
 
 # Import and Create XML Object
 [xml]$XML = Get-Content $PSScriptRoot\DellSDPCatalogPC.xml -Verbose
@@ -36,10 +36,10 @@ $Downloads = $xml.SystemsManagementCatalog.SoftwareDistributionPackage
 $Model = (Get-WmiObject win32_computersystem).Model
 If(!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M"))){
     $Target = $Downloads | Where-Object -FilterScript {
-        $PSitem.LocalizedProperties.Title -match $model -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
+        $PSitem.LocalizedProperties.Title -match $model -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M" -and $PSitem.Properties.PublicationState -match "Published"
     }
 }
-Else{$Target = $Downloads | Where-Object -FilterScript {$PSitem.LocalizedProperties.Title -match $model}}
+Else{$Target = $Downloads | Where-Object -FilterScript {$PSitem.LocalizedProperties.Title -match $model -and $PSitem.Properties.PublicationState -match "Published"}}
 $TargetLink = $Target.InstallableItem.OriginFile.OriginUri
 $TargetFileName = $Target.InstallableItem.OriginFile.FileName
 Invoke-WebRequest -Uri $TargetLink -OutFile $PSScriptRoot\$TargetFileName -UseBasicParsing -Verbose
